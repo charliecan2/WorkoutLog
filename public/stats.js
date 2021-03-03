@@ -1,3 +1,14 @@
+fetch("/api/workouts/")
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    populateChart(data);
+  });
+
+
+API.getWorkoutsInRange();
+
 function generatePalette() {
   const arr = [
     '#003f5c',
@@ -173,6 +184,18 @@ function populateChart(data) {
   });
 }
 
+function duration(data) {
+  let durations = [];
+
+  data.forEach(workout => {
+    workout.exercises.forEach(exercise => {
+      durations.push(exercise.duration);
+    });
+  });
+
+  return durations;
+}
+
 function calculateTotalWeight(data) {
   let totals = [];
 
@@ -201,8 +224,5 @@ function workoutNames(data) {
   });
 
   // return de-duplicated array with JavaScript `Set` object
-  return [...new Set(workouts)];
+  return workouts;
 }
-
-// get all workout data from back-end
-API.getWorkoutsInRange().then(populateChart);
