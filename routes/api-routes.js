@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const Workouts = require('../models/workouts.js');
+const Workout = require('../models/workouts.js');
 
 router.get('/api/workouts', (req, res) => {
-    Workouts.find({})
+    Workout.find({})
     .then(dbWorkouts => {
       res.json(dbWorkouts);
     })
@@ -12,7 +12,7 @@ router.get('/api/workouts', (req, res) => {
 })
   
 router.post('/api/workouts', (req, res) => {
-    Workouts.create({})
+    Workout.create({})
     .then(dbWorkouts => {
       res.json(dbWorkouts)
     })
@@ -21,10 +21,11 @@ router.post('/api/workouts', (req, res) => {
     })
 });
 
-router.put('/api/workouts/:id', ({body, params}, res) => {
-    Workouts.findByIdAndUpdate(
+router.put('/api/workouts/:id', ({params, body}, res) => {
+    Workout.findByIdAndUpdate(
         params.id,
-        {$push: { exercises: body}}, {new: true, runValidators: true}
+        {$push: { exercises: body}}, 
+        {new: true, runValidators: true}
     )
     .then(dbWorkout => {
         res.json(dbWorkout);
@@ -35,19 +36,9 @@ router.put('/api/workouts/:id', ({body, params}, res) => {
 })
 
 router.get('/api/workouts/range', ({query}, res) => {
-    Workouts.find({day: {$gte: query.start, $lte: query.end}})
+    Workout.find({day: {$gte: query.start, $lte: query.end}})
     .then(dbWorkouts => {
         res.json(dbWorkouts)
-      })
-    .catch(err => {
-        res.status(400).json(err);
-    })
-})
-
-router.delete('/api/workouts', ({ body }, res) => {
-    Workouts.findByIdAndDelete(body.id)
-    .then(() => {
-        res.json(true)
       })
     .catch(err => {
         res.status(400).json(err);
