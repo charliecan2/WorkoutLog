@@ -29,6 +29,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
   useUnifiedTopology: true
 });
 
+require('./seeders/seed.js');
+
 app.use(require('./routes/api-routes.js'));
 
 app.listen(PORT, () => {
